@@ -1,0 +1,48 @@
+#!/usr/bin/bash
+
+bridgeAeria=$(/sbin/e-smith/config getprop docker bridgeAeria)
+
+if [[ -z ${bridgeAeria} ]]; then
+    exit 0
+fi
+
+HasNetwork=$(docker network ls -f name=aeria -q)
+if [[ $? != 0 ]]; then
+    exit 1
+fi
+
+if [[ -z ${HasNetwork} ]]; then
+    exit 0
+fi
+
+HasPihole=$(docker ps -f name=pihole -q -a)
+if [[ $? != 0 ]]; then
+    exit 1
+fi
+
+if [[ -n ${HasPihole} ]]; then
+    exit 0
+fi
+
+timezone=$(/sbin/e-smith/config getprop pihole timezone)
+password=$(/sbin/e-smith/config getprop pihole timeZone)
+DNS1=$(/sbin/e-smith/config getprop pihole DNS1)
+DNS2=$(/sbin/e-smith/config getprop pihole DNS2)
+mac=$(/sbin/e-smith/config getprop pihole mac)
+if [[ -z ${mac} ]]; then 
+    mac=00:60:2f$(od -txC -An -N3 /dev/random|tr \  :)
+    /sbin/e-smith/config setprop pihole mac $mac
+fi
+docker run -d --name pihole -e TZ="$timezone" \
+    -e WEBPASSWORD="$password"  \
+    -v "$(pwd)/etc-pihole/:/etc/pihole/"  -v "$(pwd)/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    --hostname pi.hole \
+    -e VIRTUAL_HOST="pi.hole" \
+    -e IPv6="false" \
+    -e dns="127.0.0.1" -e dns="1.1.1.1" \
+    -e DNS1="$DNS1" -e DNS2="$DNS2" \
+    -e DNSMASQ_LISTENING="local" \
+    --cap-add NET_ADMIN \
+    --net=aeria --mac-address=$mac \
+    --restart=unless-stopped \
+    pihole/pihole:latest

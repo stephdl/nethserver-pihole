@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+if [[ $1 == 'ip' ]]; then
+    docker inspect -f "{{.NetworkSettings.Networks.aeria.IPAddress}}" pihole
+elif [[ $1 == 'status' ]]; then
+    docker inspect -f "{{.State.Health.Status}}" pihole
+else
+    echo "The command are : 
+    pihole ip : find the IP of pihole given by your dhcp server
+    pihole status : retrieve the status of pihole container
+"
+fi
