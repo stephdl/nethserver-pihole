@@ -24,6 +24,7 @@ A module to install pihole as docker
 perl createlinks
 
 %install
+mkdir -p root/var/lib/pihole/
 rm -rf $RPM_BUILD_ROOT
 (cd root   ; find . -depth -print | cpio -dump $RPM_BUILD_ROOT)
 rm -f %{name}-%{version}-%{release}-filelist
