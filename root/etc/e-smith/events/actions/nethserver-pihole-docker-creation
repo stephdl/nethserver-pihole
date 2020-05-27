@@ -35,13 +35,9 @@ if [[ -z ${mac} ]]; then
 fi
 docker run -d --name pihole -e TZ="$timezone" \
     -e WEBPASSWORD="$password"  \
-    -v "$(pwd)/etc-pihole/:/etc/pihole/"  -v "$(pwd)/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "/var/lib/pihole/etc-pihole/:/etc/pihole/"  -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
     --hostname pi.hole \
-    -e VIRTUAL_HOST="pi.hole" \
-    -e IPv6="false" \
-    -e dns="127.0.0.1" -e dns="1.1.1.1" \
-    -e DNS1="$DNS1" -e DNS2="$DNS2" \
-    -e DNSMASQ_LISTENING="local" \
+    --env-file '/var/lib/pihole/PiholeEnvironment' \
     --cap-add NET_ADMIN \
     --net=aeria --mac-address=$mac \
     --restart=unless-stopped \
