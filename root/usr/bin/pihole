@@ -1,12 +1,19 @@
 #!/usr/bin/bash
 
 if [[ $1 == 'ip' ]]; then
+    echo "# Pihole IP"
     docker inspect -f "{{.NetworkSettings.Networks.aeria.IPAddress}}" pihole
 elif [[ $1 == 'status' ]]; then
+    echo "# pihole status"
     docker inspect -f "{{.State.Health.Status}}" pihole
+elif [[ $1 == 'env' ]]; then
+    echo "# Pihole Environment variable"
+    array=$(docker inspect -f "{{.Config.Env}}" pihole)
+    echo "${array[@]}" | tr ' ' '\n'
 else
-    echo "The command are : 
+    echo "The command are :
     pihole ip : find the IP of pihole given by your dhcp server
     pihole status : retrieve the status of pihole container
+    pihole env : retrieve all the environment vars of the container
 "
 fi
