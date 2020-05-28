@@ -3,6 +3,7 @@
 bridgeAeria=$(/sbin/e-smith/config getprop docker bridgeAeria)
 
 if [[ -z ${bridgeAeria} ]]; then
+    echo "# Bridge for aeria doesn't exist"
     exit 0
 fi
 
@@ -12,6 +13,7 @@ if [[ $? != 0 ]]; then
 fi
 
 if [[ -z ${HasNetwork} ]]; then
+    echo "# Aeria doesn't exist"
     exit 0
 fi
 
@@ -21,16 +23,18 @@ if [[ $? != 0 ]]; then
 fi
 
 if [[ -n ${HasPihole} ]]; then
+    echo "# Pihole already exists"
     exit 0
 fi
 
 mac=$(/sbin/e-smith/config getprop pihole mac)
-if [[ -z ${mac} ]]; then 
+if [[ -z ${mac} ]]; then
     mac=00:60:2f$(od -txC -An -N3 /dev/random|tr \  :)
     /sbin/e-smith/config setprop pihole mac $mac
 fi
 docker run -d --name pihole \
-    -v "/var/lib/pihole/etc-pihole/:/etc/pihole/"  -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
+    -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
     --hostname pi.hole \
     --env-file '/var/lib/pihole/PiholeEnvironment' \
     --cap-add NET_ADMIN \
