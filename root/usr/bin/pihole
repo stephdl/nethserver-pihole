@@ -10,10 +10,13 @@ elif [[ $1 == 'env' ]]; then
     echo "# Pihole Environment variable"
     array=$(docker inspect -f "{{.Config.Env}}" pihole)
     echo "${array[@]}" | tr ' ' '\n'
+elif [[ $1 == 'bash' ]]; then
+    docker exec -ti pihole /bin/bash
 else
     echo "The command are :
     pihole ip : find the IP of pihole given by your dhcp server
     pihole status : retrieve the status of pihole container
     pihole env : retrieve all the environment vars of the container
+    pihole bash : start a shell inside the container
 "
 fi
