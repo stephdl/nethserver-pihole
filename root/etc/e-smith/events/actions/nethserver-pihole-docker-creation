@@ -35,6 +35,7 @@ fi
 docker run -d --name pihole \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "/var/lib/pihole/var-log/:/var/log/" \
     --hostname pi.hole \
     --env-file '/var/lib/pihole/PiholeEnvironment' \
     --cap-add NET_ADMIN \
