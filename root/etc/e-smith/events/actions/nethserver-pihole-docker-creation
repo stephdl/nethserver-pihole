@@ -33,6 +33,11 @@ if [[ -z ${mac} ]]; then
     /sbin/e-smith/config setprop pihole mac $mac
 fi
 docker run -d --name pihole \
+    -p 53:53/tcp \
+    -p 53:53/udp \
+    -p 80:80/tcp \
+    -p 443:443/tcp \
+    -p 67:67/udp \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
     -v "/var/lib/pihole/var-log/:/var/log/" \
