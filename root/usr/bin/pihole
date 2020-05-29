@@ -9,6 +9,9 @@ elif [[ $1 == 'status' ]]; then
 elif [[ $1 == 'stop' ]]; then
     echo "# pihole stop"
     docker stop pihole
+elif [[ $1 == 'log' ]]; then
+    echo "# pihole logs"
+    docker logs pihole
 elif [[ $1 == 'ps' ]]; then
     echo "# pihole container ps"
     docker ps | grep pihole
@@ -39,5 +42,6 @@ else
     pihole destroy: Delete the pihole container
     pihole build: Delete then create the pihole container
     pihole ps: Container information
+    pihole log: Display the error log of the container
 "
 fi
