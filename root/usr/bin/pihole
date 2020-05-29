@@ -6,6 +6,22 @@ if [[ $1 == 'ip' ]]; then
 elif [[ $1 == 'status' ]]; then
     echo "# pihole status"
     docker inspect -f "{{.State.Health.Status}}" pihole
+elif [[ $1 == 'stop' ]]; then
+    echo "# pihole stop"
+    docker stop pihole
+elif [[ $1 == 'ps' ]]; then
+    echo "# pihole container ps"
+    docker ps | grep pihole
+elif [[ $1 == 'start' ]]; then
+    echo "# pihole start"
+    docker start pihole
+elif [[ $1 == 'destroy' ]]; then
+    echo "# pihole destroy"
+    docker rm -f pihole
+elif [[ $1 == 'build' ]]; then
+    echo "# pihole destroy, then build"
+    docker rm -f pihole > /dev/null 2>&1
+    /etc/e-smith/events/actions/nethserver-pihole-docker-creation
 elif [[ $1 == 'env' ]]; then
     echo "# Pihole Environment variable"
     array=$(docker inspect -f "{{.Config.Env}}" pihole)
@@ -13,10 +29,15 @@ elif [[ $1 == 'env' ]]; then
 elif [[ $1 == 'bash' ]]; then
     docker exec -ti pihole /bin/bash
 else
-    echo "The command are :
+    echo "The commands are :
     pihole ip : find the IP of pihole given by your dhcp server
     pihole status : retrieve the status of pihole container
     pihole env : retrieve all the environment vars of the container
     pihole bash : start a shell inside the container
+    pihole start: Start the pihole container
+    pihole stop: Stop the pihole container
+    pihole destroy: Delete the pihole container
+    pihole build: Delete then create the pihole container
+    pihole ps: Container information
 "
 fi
