@@ -8,5 +8,3 @@ event_actions ( $event, 'initialize-default-databases' => '00');
 event_actions($event, qw(
              nethserver-pihole-docker-creation 10
 ));
-
-templates2events("/var/lib/pihole/PiholeEnvironment", $event);

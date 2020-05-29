@@ -28,7 +28,7 @@ if [[ -n ${HasPihole} ]]; then
 fi
 
 timezone=$(/sbin/e-smith/config getprop pihole timezone)
-password=$(/sbin/e-smith/config getprop pihole timeZone)
+password=$(/sbin/e-smith/config getprop pihole password)
 DNS1=$(/sbin/e-smith/config getprop pihole DNS1)
 DNS2=$(/sbin/e-smith/config getprop pihole DNS2)
 mac=$(/sbin/e-smith/config getprop pihole mac)
@@ -49,6 +49,13 @@ docker run -d --name pihole \
     -e TZ="$timezone" \
     -e WEBPASSWORD="$password"  \
     --hostname pi.hole \
+    -e VIRTUAL_HOST="pi.hole" \
+    -e IPv6="False" \
+    -e dns="127.0.0.1" \
+    -e dns="1.1.1.1" \
+    -e DNS1="$DNS1" \
+    -e DNS2="$DNS2" \
+    -e DNSMASQ_LISTENING="local" \
     --cap-add NET_ADMIN \
     --net=aeria --mac-address=$mac \
     --restart=unless-stopped \
