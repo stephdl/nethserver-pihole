@@ -45,12 +45,11 @@ docker run -d --name pihole \
     -p 67:67/udp \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
-    -v "/var/lib/pihole/var-log/:/var/log/" \
     -e TZ="$timezone" \
     -e WEBPASSWORD="$password"  \
     --hostname pi.hole \
     -e VIRTUAL_HOST="pi.hole" \
-    -e IPv6="False" \
+    -e IPv6="false" \
     -e dns="127.0.0.1" \
     -e dns="1.1.1.1" \
     -e DNS1="$DNS1" \
