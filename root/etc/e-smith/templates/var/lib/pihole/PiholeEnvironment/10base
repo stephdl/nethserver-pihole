@@ -4,6 +4,4 @@ dns=127.0.0.1
 dns=1.1.1.1
 DNS1={$pihole{DNS1}}
 DNS2={$pihole{DNS2}}
-WEBPASSWORD={$pihole{password}}
-TZ={$pihole{timezone}}
 DNSMASQ_LISTENING=local

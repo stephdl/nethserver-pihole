@@ -27,11 +27,16 @@ if [[ -n ${HasPihole} ]]; then
     exit 0
 fi
 
+timezone=$(/sbin/e-smith/config getprop pihole timezone)
+password=$(/sbin/e-smith/config getprop pihole timeZone)
+DNS1=$(/sbin/e-smith/config getprop pihole DNS1)
+DNS2=$(/sbin/e-smith/config getprop pihole DNS2)
 mac=$(/sbin/e-smith/config getprop pihole mac)
 if [[ -z ${mac} ]]; then
     mac=00:60:2f$(od -txC -An -N3 /dev/random|tr \  :)
     /sbin/e-smith/config setprop pihole mac $mac
 fi
+
 docker run -d --name pihole \
     -p 53:53/tcp \
     -p 53:53/udp \
@@ -41,8 +46,9 @@ docker run -d --name pihole \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
     -v "/var/lib/pihole/var-log/:/var/log/" \
+    -e TZ="$timezone" \
+    -e WEBPASSWORD="$password"  \
     --hostname pi.hole \
-    --env-file '/var/lib/pihole/PiholeEnvironment' \
     --cap-add NET_ADMIN \
     --net=aeria --mac-address=$mac \
     --restart=unless-stopped \
