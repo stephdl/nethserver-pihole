@@ -17,10 +17,6 @@ pihole=configuration
 - `signal-event nethserver-pihole-update`
 - The time depends of your internet bandwith
 - check docker pihole is up : `docker ps`
-- find the ip of the container  : `pihole ip`
-- find the staus of pihole : `pihole status`
-- find all Env vars of the container : `pihole env`
-- Start a shell inside the container : `pihole bash`
 - go to the IP of pihole, the admin page is up
 - set the dns of your network by your dhcp server to pihole
 - If you want to filter porn, set DNS1 and DNS2 to cleanbrowsing.org
@@ -29,3 +25,16 @@ pihole=configuration
     DNS1=185.228.168.168    #upstream dns
     DNS2=185.228.169.168    #upstream dns
 ```
+
+A wrapper exists to ease your admin life, to retrieve help do `pihole`
+
+- find the ip of the container  : `pihole ip`
+- find the staus of pihole : `pihole status`
+- find all Env vars of the container : `pihole env`
+- Start a shell inside the container : `pihole bash`
+- Show logs of the container: `pihole log`
+- Start the container: `pihole start`
+- Stop the container: `pihole stop`
+- Destroy the container: `pihole destroy`
+- Build the container (destroy then build): `pihole build`
+- Show the docker stats of pihole: `pihole ps`
