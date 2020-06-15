@@ -1,19 +1,38 @@
 #!/usr/bin/bash
 
 bridgeAeria=$(/sbin/e-smith/config getprop docker bridgeAeria)
+macVlanNic=$(/sbin/e-smith/config getprop docker macVlanNic)
+piholeNetwork=$(/sbin/e-smith/config getprop docker piholeNetwork)
 
-if [[ -z ${bridgeAeria} ]]; then
-    echo "# Bridge for aeria doesn't exist"
-    exit 0
-fi
+if [[ ${piholeNetwork} eq 'aeria' ]];then
+    if [[ -z ${bridgeAeria} ]]; then
+        echo "# Bridge for aeria doesn't exist"
+        exit 0
+    fi
+    HasNetwork=$(docker network ls -f name=aeria -q)
+    if [[ $? != 0 ]]; then
+        exit 1
+    fi
 
-HasNetwork=$(docker network ls -f name=aeria -q)
-if [[ $? != 0 ]]; then
-    exit 1
-fi
+    if [[ -z ${HasNetwork} ]]; then
+        echo "# Aeria doesn't exist"
+        exit 0
+    fi
+elif [[ ${piholeNetwork} eq 'macvlan' ]];then
+    if [[ -z ${macVlanNic} ]]; then
+        echo "# Bridge for macvlan doesn't exist"
+        exit 0
+    fi
+    HasNetwork=$(docker network ls -f name=macvlan -q)
+    if [[ $? != 0 ]]; then
+        exit 1
+    fi
 
-if [[ -z ${HasNetwork} ]]; then
-    echo "# Aeria doesn't exist"
+    if [[ -z ${HasNetwork} ]]; then
+        echo "# Macvlan doesn't exist"
+        exit 0
+    fi
+else
     exit 0
 fi
 
@@ -32,17 +51,13 @@ password=$(/sbin/e-smith/config getprop pihole password)
 DNS1=$(/sbin/e-smith/config getprop pihole DNS1)
 DNS2=$(/sbin/e-smith/config getprop pihole DNS2)
 mac=$(/sbin/e-smith/config getprop pihole mac)
+
 if [[ -z ${mac} ]]; then
     mac=00:60:2f$(od -txC -An -N3 /dev/random|tr \  :)
     /sbin/e-smith/config setprop pihole mac $mac
 fi
 
 docker run -d --name pihole \
-    -p 53:53/tcp \
-    -p 53:53/udp \
-    -p 80:80/tcp \
-    -p 443:443/tcp \
-    -p 67:67/udp \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
     -e TZ="$timezone" \
@@ -56,6 +71,6 @@ docker run -d --name pihole \
     -e DNS2="$DNS2" \
     -e DNSMASQ_LISTENING="local" \
     --cap-add NET_ADMIN \
-    --net=aeria --mac-address=$mac \
+    --net=$piholeNetwork --mac-address=$mac \
     --restart=unless-stopped \
     pihole/pihole:latest
