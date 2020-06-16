@@ -2,9 +2,10 @@
 
 bridgeAeria=$(/sbin/e-smith/config getprop docker bridgeAeria)
 macVlanNic=$(/sbin/e-smith/config getprop docker macVlanNic)
-piholeNetwork=$(/sbin/e-smith/config getprop docker piholeNetwork)
+piholeNetwork=$(/sbin/e-smith/config getprop pihole piholeNetwork)
+piholeMacVlanIP=$(/sbin/e-smith/config getprop pihole piholeMacVlanIP)
 
-if [[ ${piholeNetwork} eq 'aeria' ]];then
+if [[ ${piholeNetwork} == 'aeria' ]];then
     if [[ -z ${bridgeAeria} ]]; then
         echo "# Bridge for aeria doesn't exist"
         exit 0
@@ -18,7 +19,7 @@ if [[ ${piholeNetwork} eq 'aeria' ]];then
         echo "# Aeria doesn't exist"
         exit 0
     fi
-elif [[ ${piholeNetwork} eq 'macvlan' ]];then
+elif [[ ${piholeNetwork} == 'macvlan' ]];then
     if [[ -z ${macVlanNic} ]]; then
         echo "# Bridge for macvlan doesn't exist"
         exit 0
@@ -57,6 +58,7 @@ if [[ -z ${mac} ]]; then
     /sbin/e-smith/config setprop pihole mac $mac
 fi
 
+if [[ ${piholeNetwork} == 'aeria' ]];then
 docker run -d --name pihole \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
@@ -74,3 +76,24 @@ docker run -d --name pihole \
     --net=$piholeNetwork --mac-address=$mac \
     --restart=unless-stopped \
     pihole/pihole:latest
+
+elif [[ ${piholeNetwork} == 'macvlan' ]];then
+docker run -d --name pihole \
+    -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
+    -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -e TZ="$timezone" \
+    -e WEBPASSWORD="$password"  \
+    --hostname pi.hole \
+    -e VIRTUAL_HOST="pi.hole" \
+    -e IPv6="false" \
+    -e dns="127.0.0.1" \
+    -e dns="1.1.1.1" \
+    -e DNS1="$DNS1" \
+    -e DNS2="$DNS2" \
+    -e DNSMASQ_LISTENING="local" \
+    --cap-add NET_ADMIN \
+    --ip=$piholeMacVlanIP \
+    --net=$piholeNetwork \
+    --restart=unless-stopped \
+    pihole/pihole:latest
+fi
