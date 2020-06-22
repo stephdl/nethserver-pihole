@@ -2,7 +2,13 @@
 
 if [[ $1 == 'ip' ]]; then
     echo "# Pihole IP"
-    docker inspect -f "{{.NetworkSettings.Networks.aeria.IPAddress}}" pihole
+    piholeNetwork=$(/sbin/e-smith/config getprop pihole piholeNetwork)
+    if [[ ${piholeNetwork} == 'macvlan' ]]; then
+        piholeMacVlanIP=$(/sbin/e-smith/config getprop pihole piholeMacVlanIP)
+        echo $piholeMacVlanIP
+    else
+        docker inspect -f "{{.NetworkSettings.Networks.aeria.IPAddress}}" pihole
+    fi
 elif [[ $1 == 'status' ]]; then
     echo "# pihole status"
     docker inspect -f "{{.State.Health.Status}}" pihole
