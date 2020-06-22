@@ -2,9 +2,9 @@
 
 - yum install nethserver-pihole
 - Create a bridge with the network panel or use `br0` (created by nethserver-dc), it is needed by aeria or macvlan.
-- Decide if you want to use aeria or macvlan
+- Decide if you want to use aeria (**experimental**) or macvlan (**Recommended**)
 
-For aeria :
+For aeria (**experimental**):
 ```
 config setprop docker bridgeAeria br0
 signal-event nethserver-docker-update
@@ -15,11 +15,15 @@ signal-event nethserver-docker-update
 
 `config setprop pihole piholeNetwork aeria`
 
-For macvlan check https://github.com/NethServer/nethserver-docker/blob/master/README.rst#macvlan
+For macvlan (**Recommended**) 
+
+check for explanations: https://github.com/NethServer/nethserver-docker/blob/master/README.rst#macvlan
+
 ```
 config setprop  docker macVlanGateway 192.168.1.1 macVlanLocalNetwork 192.168.1.0/24 macVlanNetwork 192.168.1.224/27 macVlanNic br0
 signal-event nethserver-docker-update
 ```
+
 - check macvlan is up : `docker network ls`
 - then assign `macvlan` to piholeNetwork and set the IP to `piholeMacVlanIP` (in macvlan range)
 
