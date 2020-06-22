@@ -9,7 +9,7 @@ License: GPL
 Group: Networking/Daemons
 Source: %{name}-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-%{version}-%{release}-buildroot
-Requires: nethserver-docker
+Requires: nethserver-docker > 1.0.6
 BuildRequires: nethserver-devtools
 BuildArch: noarch
 
