@@ -69,8 +69,8 @@ docker run -d --name pihole \
     -e IPv6="false" \
     -e dns="127.0.0.1" \
     -e dns="1.1.1.1" \
-    -e DNS1="$DNS1" \
-    -e DNS2="$DNS2" \
+    -e DNS1="${DNS1}#53" \
+    -e DNS2="${DNS2}#53" \
     -e DNSMASQ_LISTENING="local" \
     --cap-add NET_ADMIN \
     --net=$piholeNetwork --mac-address=$mac \
@@ -88,8 +88,8 @@ docker run -d --name pihole \
     -e IPv6="false" \
     -e dns="127.0.0.1" \
     -e dns="1.1.1.1" \
-    -e DNS1="$DNS1" \
-    -e DNS2="$DNS2" \
+    -e DNS1="${DNS1}#53" \
+    -e DNS2="${DNS2}#53" \
     -e DNSMASQ_LISTENING="local" \
     --cap-add NET_ADMIN \
     --ip=$piholeMacVlanIP \
