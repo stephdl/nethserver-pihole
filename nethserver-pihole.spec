@@ -1,7 +1,7 @@
 Summary: nethserver-pihole  is A module to install pihole as docker
 %define name nethserver-pihole
 Name: %{name}
-%define version 0.0.5
+%define version 0.0.6
 %define release 1
 Version: %{version}
 Release: %{release}%{?dist}
@@ -42,6 +42,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 
 %changelog
+* Thu Aug 6 2020 stephane de Labrusse <stephdl@de-labrusse.fr> 0.0.6
+- Upgrade the docker image
 * Sat Jun 27 2020 stephane de Labrusse <stephdl@de-labrusse.fr> 0.0.5
 - Add #53 to dns IP
 * Tue Jun 23 2020 stephane de Labrusse <stephdl@de-labrusse.fr> 0.0.4
