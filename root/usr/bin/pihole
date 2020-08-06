@@ -31,6 +31,11 @@ elif [[ $1 == 'build' ]]; then
     echo "# pihole destroy, then build"
     docker rm -f pihole > /dev/null 2>&1
     /etc/e-smith/events/actions/nethserver-pihole-docker-creation
+elif [[ $1 == 'upgrade' ]]; then
+    echo "# upgrade docker image, destroy, then build"
+    docker pull pihole/pihole:latest
+    docker rm -f pihole > /dev/null 2>&1
+    /etc/e-smith/events/actions/nethserver-pihole-docker-creation
 elif [[ $1 == 'env' ]]; then
     echo "# Pihole Environment variable"
     array=$(docker inspect -f "{{.Config.Env}}" pihole)
@@ -47,6 +52,7 @@ else
     pihole stop: Stop the pihole container
     pihole destroy: Delete the pihole container
     pihole build: Delete then create the pihole container
+    pihole upgrade: Upgrade docker image, delete then create the pihole container
     pihole ps: Container information
     pihole log: Display the error log of the container
 "
