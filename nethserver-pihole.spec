@@ -26,6 +26,9 @@ perl createlinks
 %install
 rm -rf $RPM_BUILD_ROOT
 (cd root   ; find . -depth -print | cpio -dump $RPM_BUILD_ROOT)
+
+%{__mkdir_p} -p $RPM_BUILD_ROOT/var/lib/pihole/php-conf.d/
+
 rm -f %{name}-%{version}-%{release}-filelist
 %{genfilelist} $RPM_BUILD_ROOT \
 > %{name}-%{version}-%{release}-filelist
