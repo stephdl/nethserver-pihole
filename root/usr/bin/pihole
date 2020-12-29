@@ -26,7 +26,7 @@ elif [[ $1 == 'start' ]]; then
     docker start pihole
 elif [[ $1 == 'restart' ]]; then
     echo "# pihole restart"
-    docker stop pihole
+    docker stop pihole > /dev/null 2>&1
     docker start pihole
 elif [[ $1 == 'destroy' ]]; then
     echo "# pihole destroy"
