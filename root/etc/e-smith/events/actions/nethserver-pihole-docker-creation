@@ -62,6 +62,7 @@ if [[ ${piholeNetwork} == 'aeria' ]];then
 docker run -d --name pihole \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "/var/lib/pihole/php-conf.d/99-memory.ini:/etc/php/7.3/cgi/conf.d/99-memory.ini" \
     -e TZ="$timezone" \
     -e WEBPASSWORD="$password"  \
     --hostname pi.hole \
@@ -81,6 +82,7 @@ elif [[ ${piholeNetwork} == 'macvlan' ]];then
 docker run -d --name pihole \
     -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
     -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "/var/lib/pihole/php-conf.d/99-memory.ini:/etc/php/7.3/cgi/conf.d/99-memory.ini" \
     -e TZ="$timezone" \
     -e WEBPASSWORD="$password"  \
     --hostname pi.hole \
