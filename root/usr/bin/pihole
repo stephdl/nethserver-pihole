@@ -24,6 +24,10 @@ elif [[ $1 == 'ps' ]]; then
 elif [[ $1 == 'start' ]]; then
     echo "# pihole start"
     docker start pihole
+elif [[ $1 == 'restart' ]]; then
+    echo "# pihole restart"
+    docker stop pihole
+    docker start pihole
 elif [[ $1 == 'destroy' ]]; then
     echo "# pihole destroy"
     docker rm -f pihole
@@ -48,6 +52,7 @@ else
     pihole status : retrieve the status of pihole container
     pihole env : retrieve all the environment vars of the container
     pihole bash : start a shell inside the container
+    pihole restart: Restart the pihole container
     pihole start: Start the pihole container
     pihole stop: Stop the pihole container
     pihole destroy: Delete the pihole container
