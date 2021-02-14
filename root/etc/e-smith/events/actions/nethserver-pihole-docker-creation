@@ -4,6 +4,7 @@ bridgeAeria=$(/sbin/e-smith/config getprop docker bridgeAeria)
 macVlanNic=$(/sbin/e-smith/config getprop docker macVlanNic)
 piholeNetwork=$(/sbin/e-smith/config getprop pihole piholeNetwork)
 piholeMacVlanIP=$(/sbin/e-smith/config getprop pihole piholeMacVlanIP)
+piholeAquaIP=$(/sbin/e-smith/config getprop pihole piholeAquaIP)
 
 if [[ ${piholeNetwork} == 'aeria' ]];then
     if [[ -z ${bridgeAeria} ]]; then
@@ -33,7 +34,7 @@ elif [[ ${piholeNetwork} == 'macvlan' ]];then
         echo "# Macvlan doesn't exist"
         exit 0
     fi
-else
+elif [[ ${piholeNetwork} == '' ]];then
     exit 0
 fi
 
@@ -98,4 +99,33 @@ docker run -d --name pihole \
     --net=$piholeNetwork \
     --restart=unless-stopped \
     pihole/pihole:latest
+
+elif [[ ${piholeNetwork} == 'aqua' ]];then
+#
+# this is an hidden egg 
+# do a reverse proxy pi.hole to http://172.28.45.1
+# create a host self in nethserver 
+#    pi.hole=self
+#        Description=vhost Reverse
+# set the dns server of NS to pihole (172.28.45.1)
+docker run -d --name pihole \
+    -v "/var/lib/pihole/etc-pihole/:/etc/pihole/" \
+    -v "/var/lib/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v "/var/lib/pihole/php-conf.d/99-memory.ini:/etc/php/7.3/cgi/conf.d/99-memory.ini" \
+    -e TZ="$timezone" \
+    -e WEBPASSWORD="$password"  \
+    --hostname pi.hole \
+    -e VIRTUAL_HOST="pi.hole" \
+    -e IPv6="false" \
+    -e dns="127.0.0.1" \
+    -e dns="1.1.1.1" \
+    -e DNS1="${DNS1}#53" \
+    -e DNS2="${DNS2}#53" \
+    -e DNSMASQ_LISTENING="local" \
+    --cap-add NET_ADMIN \
+    --ip=$piholeAquaIP \
+    --net=$piholeNetwork \
+    --restart=unless-stopped \
+    pihole/pihole:latest
+
 fi
