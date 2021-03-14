@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+
+piholeNetwork=$(/sbin/e-smith/config getprop pihole piholeNetwork)
+piholeAquaIP=$(/sbin/e-smith/config getprop pihole piholeAquaIP)
+
+if [[ ${piholeNetwork} == '' ]];then
+    exit 0
+fi
+
+/usr/sbin/e-smith/db proxypass delete pi.hole
+
+if [[ ${piholeNetwork} == 'aqua' ]];then
+    /usr/sbin/e-smith/db hosts set pi.hole VhostReverse Description 'Pihole host' CertVerification 'yes' \
+        HTTP no HTTPS yes PreserveHost yes SslCertificate '' Target http://${piholeAquaIP} \
+        ValidFrom '' WebSockets enabled WebSocketsPath ''
+    /usr/sbin/e-smith/signal-event nethserver-httpd-save
+fi
