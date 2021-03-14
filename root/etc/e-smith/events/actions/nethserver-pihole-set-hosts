@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+
+piholeNetwork=$(/sbin/e-smith/config getprop pihole piholeNetwork)
+piholeAquaIP=$(/sbin/e-smith/config getprop pihole piholeAquaIP)
+piholeMacVlanIP=$(/sbin/e-smith/config getprop pihole piholeMacVlanIP)
+
+if [[ ${piholeNetwork} == '' ]];then
+    exit 0
+fi
+
+/usr/sbin/e-smith/db hosts delete pi.hole
+
+if [[ ${piholeNetwork} == 'aqua' ]];then
+    /usr/sbin/e-smith/db hosts set pi.hole self Description 'Pihole host'
+elif [[ ${piholeNetwork} == 'macvlan' ]];then
+    /usr/sbin/e-smith/db hosts set pi.hole remote Description 'Pihole host' IpAddress ${piholeMacVlanIP}
+fi
