@@ -19,3 +19,5 @@ elif [[ ${piholeNetwork} == 'macvlan' ]];then
     fi
     /usr/sbin/e-smith/db hosts set pi.hole remote Description 'Pihole host' IpAddress ${piholeMacVlanIP}
 fi
+
+/usr/sbin/e-smith/expand-template /etc/hosts
