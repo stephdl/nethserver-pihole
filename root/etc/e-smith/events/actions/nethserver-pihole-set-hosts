@@ -14,5 +14,8 @@ fi
 if [[ ${piholeNetwork} == 'aqua' ]];then
     /usr/sbin/e-smith/db hosts set pi.hole self Description 'Pihole host'
 elif [[ ${piholeNetwork} == 'macvlan' ]];then
+    if [[ ${piholeMacVlanIP} == '' ]];then
+        exit 0
+    fi
     /usr/sbin/e-smith/db hosts set pi.hole remote Description 'Pihole host' IpAddress ${piholeMacVlanIP}
 fi
