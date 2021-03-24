@@ -7,6 +7,12 @@ event_actions ( $event, 'initialize-default-databases' => '00');
 
 event_actions($event, qw(
              nethserver-pihole-docker-creation 10
+             nethserver-pihole-set-hosts 20
+             nethserver-pihole-set-reverse-proxy 30
 ));
 
 templates2events("/var/lib/pihole/php-conf.d/99-memory.ini", $event);
+
+event_services($event,
+               'dnsmasq' => 'restart'
+);
