@@ -1,7 +1,7 @@
 Summary: nethserver-pihole  is A module to install pihole as docker
 %define name nethserver-pihole
 Name: %{name}
-%define version 1.0.0
+%define version 1.0.1
 %define release 1
 Version: %{version}
 Release: %{release}%{?dist}
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 
 %changelog
+* Wed Mar 24 2021 stephane de Labrusse <stephdl@de-labrusse.fr> 1.0.1
+- Pihole can run on aqua
+
 * Tue Dec 29 2020 stephane de Labrusse <stephdl@de-labrusse.fr> 1.0.0
 - Pihole restart is a valid action
 - CGI php memory limit is customisable
