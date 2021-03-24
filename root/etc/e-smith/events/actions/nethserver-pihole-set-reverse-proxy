@@ -14,5 +14,6 @@ if [[ ${piholeNetwork} == 'aqua' ]];then
     /usr/sbin/e-smith/db proxypass set pi.hole VhostReverse Description 'Pihole host' CertVerification 'yes' \
         HTTP no HTTPS yes PreserveHost yes SslCertificate '' Target http://${piholeAquaIP} \
         ValidFrom '' WebSockets enabled WebSocketsPath ''
-    /usr/sbin/e-smith/signal-event nethserver-httpd-save
 fi
+
+/usr/sbin/e-smith/signal-event nethserver-httpd-save
